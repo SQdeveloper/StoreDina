@@ -18,12 +18,14 @@ public class LoginUserController {
     private ClientDao clientDao;
     private EntityManager em;
     
-    public LoginUserController() {
-        this.em = JPAUtil.getEntityManager();
-        this.clientDao = new ClientDao(em);
+    public LoginUserController() {        
     }
     
     public void saveData(String name, String dni) {
+        this.em = JPAUtil.getEntityManager();        
+
+        this.clientDao = new ClientDao(em);
+
         this.em.getTransaction().begin();
         Client client = new Client(name, dni);
         clientDao.save(client);

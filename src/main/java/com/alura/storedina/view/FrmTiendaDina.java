@@ -4,6 +4,9 @@
  */
 package com.alura.storedina.view;
 
+import com.alura.storedina.controller.FrmTiendaController;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author PC
@@ -13,8 +16,12 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     /**
      * Creates new form FrmTiendaDina
      */
+    
+    private FrmTiendaController frmTiendaController = new FrmTiendaController();
+    
     public FrmTiendaDina() {
         initComponents();
+        startComponents();
     }
 
     /**
@@ -36,10 +43,10 @@ public class FrmTiendaDina extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtPrice = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        tbProducts = new javax.swing.JTable();
+        btAddProduct = new javax.swing.JButton();
+        btRemoveProduct = new javax.swing.JButton();
+        btBuy = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -61,11 +68,16 @@ public class FrmTiendaDina extends javax.swing.JFrame {
 
         jLabel2.setText("Product:");
 
-        cbAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Elige tu producto--", "Coca Cola", "Galleta ricks", "Papel higienico" }));
+        cbAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Elige tu producto--" }));
 
         jLabel3.setText("Amount:");
 
-        cbProduct.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Elige tu producto--", "Coca Cola", "Galleta ricks", "Papel higienico" }));
+        cbProduct.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Elige tu producto--" }));
+        cbProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbProductActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Price:");
 
@@ -76,29 +88,40 @@ public class FrmTiendaDina extends javax.swing.JFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tbProducts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Name", "Amount", "Unitary Price", "Total Price"
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-        jButton1.setText("Add Product");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbProducts.setRowHeight(30);
+        jScrollPane2.setViewportView(tbProducts);
 
-        jButton2.setText("Remove Product");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btAddProduct.setText("Add Product");
+        btAddProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btAddProductActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Buy");
+        btRemoveProduct.setText("Remove Product");
+        btRemoveProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRemoveProductActionPerformed(evt);
+            }
+        });
+
+        btBuy.setText("Buy");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,7 +130,7 @@ public class FrmTiendaDina extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addComponent(btRemoveProduct)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jScrollPane2)
                         .addGroup(layout.createSequentialGroup()
@@ -116,19 +139,21 @@ public class FrmTiendaDina extends javax.swing.JFrame {
                                 .addComponent(jLabel2))
                             .addGap(22, 22, 22)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(cbProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cbAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(120, 120, 120)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jButton1)
+                                        .addComponent(btAddProduct)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel4)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jButton3)))))))
+                                        .addComponent(btBuy)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(74, 74, 74)
+                                    .addComponent(jLabel1))))))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -146,26 +171,54 @@ public class FrmTiendaDina extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cbAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btAddProduct))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btRemoveProduct)
+                    .addComponent(btBuy))
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void startComponents() {
+        //We load combo box Products and Amount 
+        frmTiendaController.loadComboProduct(cbProduct);                      
+    }
+    
     private void txtPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPriceActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPriceActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btRemoveProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRemoveProductActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btRemoveProductActionPerformed
+
+    private void btAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddProductActionPerformed
+        
+//        String productName = (String) cbProduct.getSelectedItem();
+//        String Amount
+//        frmTiendaController.addItemList();
+    }//GEN-LAST:event_btAddProductActionPerformed
+
+    private void cbProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbProductActionPerformed
+        if(cbProduct.getSelectedIndex() != 0) {
+            
+            //We get to the index of product
+            int index = cbProduct.getSelectedIndex();
+            
+            //We load combo box amount
+            frmTiendaController.loadComboAmount(cbAmount, index);
+            
+            //We remove element of index 0 (--Elige tu producto--)
+//            if(cbProduct.getItemAt(0) == "--Elige tu producto--") {
+//                cbProduct.removeItemAt(0);
+//            }            
+        }
+    }//GEN-LAST:event_cbProductActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,11 +256,11 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAddProduct;
+    private javax.swing.JButton btBuy;
+    private javax.swing.JButton btRemoveProduct;
     private javax.swing.JComboBox<String> cbAmount;
     private javax.swing.JComboBox<String> cbProduct;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -215,7 +268,7 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable tbProducts;
     private javax.swing.JTextField txtPrice;
     // End of variables declaration//GEN-END:variables
 }
