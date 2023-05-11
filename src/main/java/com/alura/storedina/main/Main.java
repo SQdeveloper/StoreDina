@@ -10,6 +10,7 @@ import com.alura.storedina.models.Category;
 import com.alura.storedina.models.Product;
 import com.alura.storedina.utils.JPAUtil;
 import com.alura.storedina.view.LoginUser;
+import java.math.BigDecimal;
 import javax.persistence.EntityManager;
 
 /**
@@ -43,10 +44,10 @@ public class Main {
         Category cleannigServices = new Category("cleannigServices");
 
         
-        Product product1 = new Product("PlayStation", "console", 15, tecnology);
-        Product product2 = new Product("Coca Cola", "gaseosa", 39, soda);
-        Product product3 = new Product("Galleta Ricks", "galleta", 34, cookie);
-        Product product4 = new Product("Papel Higienico", "servicio", 53, cleannigServices);        
+        Product product1 = new Product("PlayStation", "console", 15,new BigDecimal("1200"), tecnology);
+        Product product2 = new Product("Coca Cola", "gaseosa", 39,new BigDecimal("34"), soda);
+        Product product3 = new Product("Galleta Ricks", "galleta", 34,new BigDecimal("20"), cookie);
+        Product product4 = new Product("Papel Higienico", "servicio", 53,new BigDecimal("12"), cleannigServices);        
         
         //We begin the transaction
         em.getTransaction().begin();

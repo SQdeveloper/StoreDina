@@ -18,9 +18,19 @@ public class LoginUser extends javax.swing.JFrame {
      */
     
     private LoginUserController loginUserController = new LoginUserController();
+    private String clientName;    
+    private String clientDni;    
     
     public LoginUser() {
         initComponents();
+    }
+    
+    public String getclientName() {
+        return clientName;
+    }
+    
+    public String getclientDni() {
+        return clientDni;
     }
 
     /**
@@ -104,9 +114,9 @@ public class LoginUser extends javax.swing.JFrame {
         if(!txtDni.getText().equals("") && txtDni.getText().length() == 9 && !txtName.getText().equals("")) {            
             
             //We saved the client whit loginUserController
-            String name = txtName.getText();
-            String dni  = txtDni.getText();
-            loginUserController.saveData(name, dni);
+            clientName = txtName.getText();
+            clientDni  = txtDni.getText();
+//            loginUserController.saveData(name, dni);
             
             //We call to FrmTiendaDina
             FrmTiendaDina frmTienda = new FrmTiendaDina();

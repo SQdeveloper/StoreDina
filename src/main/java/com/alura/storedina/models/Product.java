@@ -4,6 +4,7 @@
  */
 package com.alura.storedina.models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
+    private BigDecimal price;
     private int amount;
     private static List<Product> allProducts;
     @ManyToOne(fetch=FetchType.LAZY)
@@ -36,10 +38,11 @@ public class Product {
     public Product() {        
     }
     
-    public Product(String name, String description, int amount, Category category) {        
+    public Product(String name, String description, int amount, BigDecimal price, Category category) {        
         this.name = name;
         this.description = description;
         this.amount = amount;
+        this.price = price;
         this.category = category;        
     }
 
@@ -89,4 +92,8 @@ public class Product {
     public static List<Product> getAllProducts() {
         return allProducts;
     }
+
+    public BigDecimal getPrice() {
+        return price;
+    }        
 }

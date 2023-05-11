@@ -5,6 +5,7 @@
 package com.alura.storedina.view;
 
 import com.alura.storedina.controller.FrmTiendaController;
+import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,6 +19,7 @@ public class FrmTiendaDina extends javax.swing.JFrame {
      */
     
     private FrmTiendaController frmTiendaController = new FrmTiendaController();
+    private int amount = 1;
     
     public FrmTiendaDina() {
         initComponents();
@@ -68,7 +70,17 @@ public class FrmTiendaDina extends javax.swing.JFrame {
 
         jLabel2.setText("Product:");
 
-        cbAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Elige tu producto--" }));
+        cbAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1" }));
+        cbAmount.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbAmountItemStateChanged(evt);
+            }
+        });
+        cbAmount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAmountActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Amount:");
 
@@ -108,6 +120,11 @@ public class FrmTiendaDina extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tbProducts);
 
         btAddProduct.setText("Add Product");
+        btAddProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btAddProductMouseClicked(evt);
+            }
+        });
         btAddProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btAddProductActionPerformed(evt);
@@ -140,9 +157,9 @@ public class FrmTiendaDina extends javax.swing.JFrame {
                             .addGap(22, 22, 22)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbProduct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cbAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(cbProduct, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cbAmount, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGap(120, 120, 120)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(btAddProduct)
@@ -198,10 +215,7 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     }//GEN-LAST:event_btRemoveProductActionPerformed
 
     private void btAddProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddProductActionPerformed
-        
-//        String productName = (String) cbProduct.getSelectedItem();
-//        String Amount
-//        frmTiendaController.addItemList();
+       
     }//GEN-LAST:event_btAddProductActionPerformed
 
     private void cbProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbProductActionPerformed
@@ -211,14 +225,38 @@ public class FrmTiendaDina extends javax.swing.JFrame {
             int index = cbProduct.getSelectedIndex();
             
             //We load combo box amount
-            frmTiendaController.loadComboAmount(cbAmount, index);
-            
-            //We remove element of index 0 (--Elige tu producto--)
-//            if(cbProduct.getItemAt(0) == "--Elige tu producto--") {
-//                cbProduct.removeItemAt(0);
-//            }            
+            frmTiendaController.loadComboAmount(cbAmount, index);                     
+
+            //We update txtPrice where is select a product in cbProduct
+            frmTiendaController.updateTxtPrice(txtPrice, index, 1);
         }
     }//GEN-LAST:event_cbProductActionPerformed
+
+    private void cbAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAmountActionPerformed
+        if(cbAmount.getItemCount() > 1) {
+            amount = (int) cbAmount.getSelectedItem();                          
+            int index = cbProduct.getSelectedIndex();
+            
+            //We update TextPrice where is selected cbAmount
+            frmTiendaController.updateTxtPrice(txtPrice, index, amount);
+        }        
+    }//GEN-LAST:event_cbAmountActionPerformed
+
+    private void cbAmountItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAmountItemStateChanged
+        
+    }//GEN-LAST:event_cbAmountItemStateChanged
+
+    private void btAddProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btAddProductMouseClicked
+        
+        if(cbProduct.getSelectedIndex() != 0) {
+            String name = (String) cbProduct.getSelectedItem();
+            int amount  = (int) cbAmount.getSelectedItem();
+            BigDecimal totalPrice = new BigDecimal(txtPrice.getText());
+            int index  = (int) cbProduct.getSelectedIndex();
+            
+            frmTiendaController.addItemList(tbProducts, name, amount, index, totalPrice);
+        }
+    }//GEN-LAST:event_btAddProductMouseClicked
 
     /**
      * @param args the command line arguments
