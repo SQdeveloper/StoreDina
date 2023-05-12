@@ -31,26 +31,43 @@ public class FrmTiendaController {
     public FrmTiendaController() {
     }
     
-    public void addItemList(JTable tbProducts, String name, int amount, int index, BigDecimal totalPrice) {                   
-        List<Product> products = Product.getAllProducts();
-        Product product = products.get(index -1);
+    public void addItemInTable(JTable tbProducts, Product product, int amount, int index, BigDecimal totalPrice) {                           
+        
         BigDecimal unitaryPrice = product.getPrice();
         
         //We show the product add in the table(interfaz)
         DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
-        model.addRow(new Object[] {name, amount, unitaryPrice, totalPrice});
+        model.addRow(new Object[] {product, amount, unitaryPrice, totalPrice});                        
+    }
+    
+    //para el button COMPRARRRRRRRRR (BUYYYY)
+    public void addItemToDataBase(JTable tbProducts, Client client) {                                         
         
-        //We add the product(item) in the models
-        ItemOrder itemOrder = new ItemOrder(product, amount);
-        LoginUser loginUser = new LoginUser();
-        
-        String clientName = loginUser.getclientName();
-        String clientDni  = loginUser.getclientDni();
-        
-        Client client = new Client(clientName, clientDni);
         Order order = new Order(client);
-        order.addItems(itemOrder);
         
+        EntityManager em = JPAUtil.getEntityManager();
+        em.getTransaction().begin();
+
+        em.persist(client);
+        em.persist(order);
+
+        for(int i=0; i < tbProducts.getRowCount(); i++) {
+            Product product = (Product) tbProducts.getValueAt(i, 0);
+            
+            String name = (String) product.getName();            
+            int  amount = (int) tbProducts.getValueAt(i, 1);
+            BigDecimal unitaryPrice = (BigDecimal) tbProducts.getValueAt(i, 2);
+            BigDecimal totalPrice = (BigDecimal) tbProducts.getValueAt(i, 3);
+                                                                                
+            ItemOrder itemOrder = new ItemOrder(product, amount);                                                          
+            order.addItems(itemOrder);               
+                                    
+            //We persist(save) the data in the dataBase            
+            em.persist(itemOrder);            
+        }
+        
+        em.getTransaction().commit();
+        em.close();        
     }
     
     public void loadComboProduct(JComboBox cbProduct) {        
@@ -62,7 +79,7 @@ public class FrmTiendaController {
         List<Product> products = productDao.getAllProducts();                        
         
         products.forEach(product -> {
-            cbProduct.addItem(product.getName());
+            cbProduct.addItem(product);
             Product.addAllProducts(product);
         });
         

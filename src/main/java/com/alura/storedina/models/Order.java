@@ -68,7 +68,7 @@ public class Order {
         this.items.add(item);
         
         //We add total price
-        this.totalPrice.add(item.getTotalPrice());
+        this.totalPrice = this.totalPrice.add(item.getTotalPrice());                
     }
 
     public LocalDate getOrderDate() {

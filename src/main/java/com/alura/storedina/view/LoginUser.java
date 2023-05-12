@@ -5,6 +5,7 @@
 package com.alura.storedina.view;
 
 import com.alura.storedina.controller.LoginUserController;
+import com.alura.storedina.models.Client;
 import javax.swing.JOptionPane;
 
 /**
@@ -116,10 +117,10 @@ public class LoginUser extends javax.swing.JFrame {
             //We saved the client whit loginUserController
             clientName = txtName.getText();
             clientDni  = txtDni.getText();
-//            loginUserController.saveData(name, dni);
+            Client client = new Client(clientName, clientDni);
             
             //We call to FrmTiendaDina
-            FrmTiendaDina frmTienda = new FrmTiendaDina();
+            FrmTiendaDina frmTienda = new FrmTiendaDina(client);
             frmTienda.setLocationRelativeTo(null);            
             frmTienda.setVisible(true);
             

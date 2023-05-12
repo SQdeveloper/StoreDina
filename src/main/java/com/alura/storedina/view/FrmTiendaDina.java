@@ -5,6 +5,9 @@
 package com.alura.storedina.view;
 
 import com.alura.storedina.controller.FrmTiendaController;
+import com.alura.storedina.models.Client;
+import com.alura.storedina.models.Order;
+import com.alura.storedina.models.Product;
 import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,14 +19,20 @@ public class FrmTiendaDina extends javax.swing.JFrame {
 
     /**
      * Creates new form FrmTiendaDina
-     */
+     */        
     
     private FrmTiendaController frmTiendaController = new FrmTiendaController();
     private int amount = 1;
+    private Client client;    
     
-    public FrmTiendaDina() {
+    public FrmTiendaDina(Client client) {
         initComponents();
         startComponents();
+        
+        this.client = client;        
+    }
+
+    private FrmTiendaDina() {        
     }
 
     /**
@@ -139,6 +148,11 @@ public class FrmTiendaDina extends javax.swing.JFrame {
         });
 
         btBuy.setText("Buy");
+        btBuy.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btBuyMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -249,14 +263,20 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     private void btAddProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btAddProductMouseClicked
         
         if(cbProduct.getSelectedIndex() != 0) {
-            String name = (String) cbProduct.getSelectedItem();
+            Product product = (Product) cbProduct.getSelectedItem();
             int amount  = (int) cbAmount.getSelectedItem();
             BigDecimal totalPrice = new BigDecimal(txtPrice.getText());
             int index  = (int) cbProduct.getSelectedIndex();
             
-            frmTiendaController.addItemList(tbProducts, name, amount, index, totalPrice);
+            //We add the date of product in the table(JFrame)
+            frmTiendaController.addItemInTable(tbProducts, product, amount, index, totalPrice);                                    
         }
     }//GEN-LAST:event_btAddProductMouseClicked
+
+    private void btBuyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btBuyMouseClicked
+                        
+        frmTiendaController.addItemToDataBase(tbProducts, client);       
+    }//GEN-LAST:event_btBuyMouseClicked
 
     /**
      * @param args the command line arguments

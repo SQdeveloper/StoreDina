@@ -21,13 +21,12 @@ public class LoginUserController {
     public LoginUserController() {        
     }
     
-    public void saveData(String name, String dni) {
+    public void saveData(Client client) {
         this.em = JPAUtil.getEntityManager();        
 
         this.clientDao = new ClientDao(em);
 
         this.em.getTransaction().begin();
-        Client client = new Client(name, dni);
         clientDao.save(client);
         this.em.getTransaction().commit();
         this.em.close();
