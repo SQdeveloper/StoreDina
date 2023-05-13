@@ -39,10 +39,9 @@ public class FrmTiendaController {
         DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
         model.addRow(new Object[] {product, amount, unitaryPrice, totalPrice});                        
     }
-    
-    //para el button COMPRARRRRRRRRR (BUYYYY)
-    public void addItemToDataBase(JTable tbProducts, Client client) {                                         
         
+    public void addItemToDataBase(JTable tbProducts, Client client) {                                         
+                
         Order order = new Order(client);
         
         EntityManager em = JPAUtil.getEntityManager();
@@ -55,9 +54,7 @@ public class FrmTiendaController {
             Product product = (Product) tbProducts.getValueAt(i, 0);
             
             String name = (String) product.getName();            
-            int  amount = (int) tbProducts.getValueAt(i, 1);
-            BigDecimal unitaryPrice = (BigDecimal) tbProducts.getValueAt(i, 2);
-            BigDecimal totalPrice = (BigDecimal) tbProducts.getValueAt(i, 3);
+            int  amount = (int) tbProducts.getValueAt(i, 1);            
                                                                                 
             ItemOrder itemOrder = new ItemOrder(product, amount);                                                          
             order.addItems(itemOrder);               
@@ -79,18 +76,15 @@ public class FrmTiendaController {
         List<Product> products = productDao.getAllProducts();                        
         
         products.forEach(product -> {
-            cbProduct.addItem(product);
-            Product.addAllProducts(product);
+            cbProduct.addItem(product);            
         });
         
         this.em.getTransaction().commit();
         this.em.close();
     }        
     
-    public void loadComboAmount(JComboBox cbAmount, int index) {
-        List<Product> products = Product.getAllProducts();
-        
-        int amountProduct = products.get(index - 1).getAmount();
+    public void loadComboAmount(JComboBox cbAmount, Product product) {                
+        int amountProduct = product.getAmount();
         cbAmount.removeAllItems();        
         
         for(int i=1; i < amountProduct + 1; i++) {
@@ -98,10 +92,16 @@ public class FrmTiendaController {
         }                
     }
 
-    public void updateTxtPrice(JTextField txtPrice, int index, int amount) {
-        List<Product> products = Product.getAllProducts();        
-        BigDecimal price = products.get(index - 1).getPrice();
+    public void updateTxtPrice(JTextField txtPrice, Product product, int amount) {            
+        BigDecimal price = product.getPrice();
         
         txtPrice.setText(price.multiply(new BigDecimal(amount)).toString());
+    }
+
+    public void removeProductAtTable(JTable tbProducts) {
+        int indexRow = tbProducts.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
+        
+        model.removeRow(indexRow);
     }
 }

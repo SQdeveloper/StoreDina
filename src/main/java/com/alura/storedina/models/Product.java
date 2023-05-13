@@ -30,8 +30,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private int amount;
-    private static List<Product> allProducts;
+    private int amount;    
     @ManyToOne(fetch=FetchType.LAZY)
     private Category category;
     
@@ -80,18 +79,7 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
-    }        
-    
-    public static void addAllProducts(Product product) {
-        if(allProducts == null) {
-            allProducts = new ArrayList();
-        }
-        allProducts.add(product);
-    }
-    
-    public static List<Product> getAllProducts() {
-        return allProducts;
-    }
+    }           
 
     public BigDecimal getPrice() {
         return price;

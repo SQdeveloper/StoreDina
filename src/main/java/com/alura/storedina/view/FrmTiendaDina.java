@@ -9,6 +9,7 @@ import com.alura.storedina.models.Client;
 import com.alura.storedina.models.Order;
 import com.alura.storedina.models.Product;
 import java.math.BigDecimal;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -141,9 +142,19 @@ public class FrmTiendaDina extends javax.swing.JFrame {
         });
 
         btRemoveProduct.setText("Remove Product");
+        btRemoveProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btRemoveProductMouseClicked(evt);
+            }
+        });
         btRemoveProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRemoveProductActionPerformed(evt);
+            }
+        });
+        btRemoveProduct.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btRemoveProductKeyPressed(evt);
             }
         });
 
@@ -236,23 +247,23 @@ public class FrmTiendaDina extends javax.swing.JFrame {
         if(cbProduct.getSelectedIndex() != 0) {
             
             //We get to the index of product
-            int index = cbProduct.getSelectedIndex();
+            Product product = (Product) cbProduct.getSelectedItem();
             
             //We load combo box amount
-            frmTiendaController.loadComboAmount(cbAmount, index);                     
+            frmTiendaController.loadComboAmount(cbAmount, product);                     
 
             //We update txtPrice where is select a product in cbProduct
-            frmTiendaController.updateTxtPrice(txtPrice, index, 1);
+            frmTiendaController.updateTxtPrice(txtPrice, product, 1);
         }
     }//GEN-LAST:event_cbProductActionPerformed
 
     private void cbAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAmountActionPerformed
-        if(cbAmount.getItemCount() > 1) {
+        if(cbAmount.getItemCount() > 1 && cbProduct.getSelectedIndex() != 0) {
             amount = (int) cbAmount.getSelectedItem();                          
-            int index = cbProduct.getSelectedIndex();
+            Product product = (Product) cbProduct.getSelectedItem();
             
             //We update TextPrice where is selected cbAmount
-            frmTiendaController.updateTxtPrice(txtPrice, index, amount);
+            frmTiendaController.updateTxtPrice(txtPrice, product, amount);
         }        
     }//GEN-LAST:event_cbAmountActionPerformed
 
@@ -271,12 +282,47 @@ public class FrmTiendaDina extends javax.swing.JFrame {
             //We add the date of product in the table(JFrame)
             frmTiendaController.addItemInTable(tbProducts, product, amount, index, totalPrice);                                    
         }
+        else {
+            //We show message
+            JOptionPane.showMessageDialog(null, "Selected your product first.");
+        }
     }//GEN-LAST:event_btAddProductMouseClicked
 
     private void btBuyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btBuyMouseClicked
                         
-        frmTiendaController.addItemToDataBase(tbProducts, client);       
+        if(tbProducts.getRowCount() > 0) {
+            frmTiendaController.addItemToDataBase(tbProducts, client);     
+
+            //We erase the data of the table
+            DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
+            model.setRowCount(0);
+
+            //We show the message
+            JOptionPane.showMessageDialog(null, "Compra realizada correctamente.");
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "You don't have none product in your list.");
+        }
     }//GEN-LAST:event_btBuyMouseClicked
+
+    private void btRemoveProductKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btRemoveProductKeyPressed
+        
+       
+    }//GEN-LAST:event_btRemoveProductKeyPressed
+
+    private void btRemoveProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btRemoveProductMouseClicked
+       
+        if(tbProducts.getSelectedRow() != -1) {
+            //We remove products with controller
+            frmTiendaController.removeProductAtTable(tbProducts);
+            //We show the message
+            JOptionPane.showMessageDialog(null, "Product remove sucessful");
+        }
+        else {
+            //We show the message
+            JOptionPane.showMessageDialog(null, "For remove select a product in the table.");
+        }                
+    }//GEN-LAST:event_btRemoveProductMouseClicked
 
     /**
      * @param args the command line arguments
