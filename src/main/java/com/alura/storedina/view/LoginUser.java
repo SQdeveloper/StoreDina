@@ -5,7 +5,6 @@
 package com.alura.storedina.view;
 
 import com.alura.storedina.controller.LoginUserController;
-import com.alura.storedina.models.Client;
 import javax.swing.JOptionPane;
 
 /**
@@ -112,15 +111,21 @@ public class LoginUser extends javax.swing.JFrame {
 
     private void buttonGetIntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGetIntoActionPerformed
         
-        if(!txtDni.getText().equals("") && txtDni.getText().length() == 9 && !txtName.getText().equals("")) {            
+        if(!txtDni.getText().equals("") && txtDni.getText().length() == 9 && !txtName.getText().equals("")) {                                    
             
             //We saved the client whit loginUserController
             clientName = txtName.getText();
-            clientDni  = txtDni.getText();
-            Client client = new Client(clientName, clientDni);
+            clientDni  = txtDni.getText();                        
+            
+//            if(clients.size() > 0) {
+//                client = clients.get(0);
+//            }
+//            else {
+//                client = new Client(clientName, clientDni);
+//            }
             
             //We call to FrmTiendaDina
-            FrmTiendaDina frmTienda = new FrmTiendaDina(client);
+            FrmTiendaDina frmTienda = new FrmTiendaDina(clientName, clientDni);
             frmTienda.setLocationRelativeTo(null);            
             frmTienda.setVisible(true);
             

@@ -24,13 +24,15 @@ public class FrmTiendaDina extends javax.swing.JFrame {
     
     private FrmTiendaController frmTiendaController = new FrmTiendaController();
     private int amount = 1;
-    private Client client;    
+    private String clientName;
+    private String clientDni;
     
-    public FrmTiendaDina(Client client) {
+    public FrmTiendaDina(String clientName, String clientDni) {
         initComponents();
         startComponents();
         
-        this.client = client;        
+        this.clientName = clientName;        
+        this.clientDni = clientDni;
     }
 
     private FrmTiendaDina() {        
@@ -290,8 +292,8 @@ public class FrmTiendaDina extends javax.swing.JFrame {
 
     private void btBuyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btBuyMouseClicked
                         
-        if(tbProducts.getRowCount() > 0) {
-            frmTiendaController.addItemToDataBase(tbProducts, client);     
+        if(tbProducts.getRowCount() > 0) {            
+            frmTiendaController.addItemToDataBase(tbProducts, clientName, clientDni);     
 
             //We erase the data of the table
             DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();

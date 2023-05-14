@@ -5,6 +5,7 @@
 package com.alura.storedina.dao;
 
 import com.alura.storedina.models.Client;
+import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
@@ -26,4 +27,9 @@ public class ClientDao {
     public void remove(Client client) {
         this.em.remove(client);
     }        
+
+    public List<Client> queryForDni(String dni) {
+        String jpql = "SELECT c FROM Client as c WHERE c.dni=:dni";
+        return this.em.createQuery(jpql, Client.class).setParameter("dni", dni).getResultList();
+    }
 }

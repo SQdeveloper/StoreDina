@@ -4,6 +4,7 @@
  */
 package com.alura.storedina.controller;
 
+import com.alura.storedina.dao.ClientDao;
 import com.alura.storedina.dao.ProductDao;
 import com.alura.storedina.models.Client;
 import com.alura.storedina.models.ItemOrder;
@@ -40,14 +41,23 @@ public class FrmTiendaController {
         model.addRow(new Object[] {product, amount, unitaryPrice, totalPrice});                        
     }
         
-    public void addItemToDataBase(JTable tbProducts, Client client) {                                         
-                
-        Order order = new Order(client);
+    public void addItemToDataBase(JTable tbProducts, String clientName, String clientDni) {                                         
+        Client client = new Client(clientName, clientDni);
         
         EntityManager em = JPAUtil.getEntityManager();
         em.getTransaction().begin();
 
-        em.persist(client);
+        ClientDao clientDao = new ClientDao(em);
+        List<Client> clients = clientDao.queryForDni(clientDni);
+        
+        if(clients.size() > 0) {
+            client = clients.get(0);
+        }
+        else {
+            em.persist(client);
+        }
+        
+        Order order = new Order(client);      
         em.persist(order);
 
         for(int i=0; i < tbProducts.getRowCount(); i++) {
@@ -66,7 +76,7 @@ public class FrmTiendaController {
         em.getTransaction().commit();
         em.close();        
     }
-    
+   
     public void loadComboProduct(JComboBox cbProduct) {        
         
         this.em = JPAUtil.getEntityManager();               
@@ -103,5 +113,5 @@ public class FrmTiendaController {
         DefaultTableModel model = (DefaultTableModel) tbProducts.getModel();
         
         model.removeRow(indexRow);
-    }
+    }        
 }
